@@ -1,7 +1,20 @@
 #!/bin/sh
 set -e
 
-touch /app/database/database.sqlite
+echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
+for i in $(seq 1 60); do
+  if nc -z "${DB_HOST}" "${DB_PORT:-3306}" 2>/dev/null; then
+    echo "MySQL is up after ${i} attempts."
+    break
+  fi
+  if [ "$i" -eq 60 ]; then
+    echo "MySQL never became available. Exiting."
+    exit 1
+  fi
+  sleep 3
+done
+
+sleep 3
 
 php artisan package:discover --ansi
 php artisan migrate --force
