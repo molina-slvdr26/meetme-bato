@@ -1,138 +1,87 @@
 @extends('layouts.app')
-
 @section('content')
-<div class="container py-2" style="max-width: 800px; padding-bottom: 6rem !important;">
-    
+<div style="padding: 2rem; max-width: 860px; margin: 0 auto;">
+
     @if(session('toast_success'))
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
-        <div class="toast show align-items-center border-0 shadow rounded-4 bg-white" role="alert">
-            <div class="d-flex p-3">
-                <div class="rounded-3 d-flex align-items-center justify-content-center bg-success bg-opacity-10 text-success me-3" style="width: 2.5rem; height: 2.5rem;">
-                    <strong>✓</strong>
+    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ session('toast_success') }}",'success'));</script>
+    @endif
+
+    @if($errors->any())
+    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ $errors->first() }}",'error'));</script>
+    @endif
+
+    <div style="margin-bottom:2rem;">
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-sub">Manage your account information and credentials.</p>
+    </div>
+
+    <div class="card-premium p-4">
+        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf @method('PUT')
+
+            {{-- Avatar Section --}}
+            <div style="display:flex;align-items:center;gap:1.5rem;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:1px solid #F1F5F9;flex-wrap:wrap;">
+                @if($user->profile_picture)
+                    <img src="{{ asset($user->profile_picture) }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #E2E8F0;flex-shrink:0;">
+                @else
+                    <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#818CF8);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;flex-shrink:0;">
+                        {{ substr($user->name,0,1) }}
+                    </div>
+                @endif
+                <div>
+                    <div style="font-weight:700;color:#0F172A;margin-bottom:0.25rem;">Profile Picture</div>
+                    <div style="font-size:0.8rem;color:#94A3B8;margin-bottom:0.75rem;">PNG, JPG or GIF. Max 2MB.</div>
+                    <input type="file" name="profile_picture" accept="image/*" class="form-control-premium" style="max-width:280px;">
                 </div>
-                <div class="me-auto fw-semibold text-secondary d-flex align-items-center">{{ session('toast_success') }}</div>
-                <button type="button" class="btn-close m-auto shadow-none" data-bs-dismiss="toast"></button>
             </div>
-        </div>
-    </div>
-    @endif
 
-    @if ($errors->any())
-    <div class="alert alert-danger border-0 rounded-4 shadow-sm p-4 mb-4">
-        <h6 class="fw-bold mb-2">Please correct the entries below:</h6>
-        <ul class="mb-0 small ps-3">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-
-    <div class="mb-5">
-        <h1 class="h2 fw-bold text-dark mb-1">Account Architecture</h1>
-        <p class="text-muted small mb-0">Modify identity parameters, credentials, and verification keys for your active session.</p>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
-        <div class="card-body">
-            
-            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
-                <div class="d-flex flex-column flex-sm-row align-items-center gap-4 border-bottom pb-4 mb-4">
-                    <div class="position-relative">
-                        @if($user->profile_picture)
-                            <img src="{{ asset($user->profile_picture) }}" 
-                                 class="rounded-circle object-fit-cover border border-light shadow-sm" 
-                                 style="width: 110px; height: 110px; min-width: 110px; min-height: 110px;">
-                        @else
-                            <div class="rounded-circle border border-light shadow-sm text-white fw-bold d-flex align-items-center justify-content-center" 
-                                 style="width: 110px; height: 110px; min-width: 110px; min-height: 110px; font-size: 2.8rem; background-color: #15325B;">
-                                {{ substr($user->name, 0, 1) }}
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <div class="w-100 text-center text-sm-start">
-                        <h5 class="fw-bold text-dark mb-1">Session Avatar Identity</h5>
-                        <p class="text-muted small mb-3">Accepts standard PNG, JPG, or GIF formats up to 2MB footprints.</p>
-                        
-                        <div style="max-width: 320px;" class="mx-auto mx-sm-0">
-                            <input type="file" name="profile_picture" class="form-control bg-light border-0 py-2 rounded-3 text-sm shadow-none" accept="image/*">
-                        </div>
-                    </div>
+            {{-- Fields --}}
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">Full Name</label>
+                    <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="form-control-premium" placeholder="Your full name">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">Email Address</label>
+                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="form-control-premium" placeholder="your@email.com">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">Phone Number</label>
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control-premium" placeholder="+63 900 000 0000">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">Gender</label>
+                    <select name="gender" class="form-control-premium form-select-premium">
+                        <option value="">Select gender</option>
+                        <option value="Male" {{ old('gender',$user->gender)=='Male'?'selected':'' }}>Male</option>
+                        <option value="Female" {{ old('gender',$user->gender)=='Female'?'selected':'' }}>Female</option>
+                        <option value="Other" {{ old('gender',$user->gender)=='Other'?'selected':'' }}>Other</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label-premium">Address</label>
+                    <textarea name="address" rows="2" class="form-control-premium" placeholder="Your mailing address">{{ old('address', $user->address) }}</textarea>
                 </div>
 
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Full Registered Name</label>
-                        <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none">
-                    </div>
-                    
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Official Email Identity</label>
-                        <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none">
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Contact Number</label>
-                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none">
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Gender Registry Designation</label>
-                        <select name="gender" class="form-select bg-light border-0 py-2.5 rounded-3 text-sm shadow-none">
-                            <option value="">Select Designation</option>
-                            <option value="Male" {{ old('gender', $user->gender) == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('gender', $user->gender) == 'Female' ? 'selected' : '' }}>Female</option>
-                            <option value="Other" {{ old('gender', $user->gender) == 'Other' ? 'selected' : '' }}>Other</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Mailing Address Locations</label>
-                        <textarea name="address" rows="2" class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none">{{ old('address', $user->address) }}</textarea>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">New Authentication Secret (Optional)</label>
-                        <input type="password" name="password" class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none" placeholder="••••••••">
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <label class="form-label text-uppercase text-secondary fw-bold mb-1" style="font-size: 11px;">Confirm New Secret</label>
-                        <input type="password" name="password_confirmation" class="form-control bg-light border-0 py-2.5 rounded-3 text-sm shadow-none" placeholder="••••••••">
-                    </div>
+                <div class="col-12" style="padding-top:0.5rem;border-top:1px solid #F1F5F9;margin-top:0.5rem;">
+                    <div style="font-size:0.875rem;font-weight:600;color:#0F172A;margin-bottom:1rem;">Change Password <span style="font-weight:400;color:#94A3B8;font-size:0.8rem;">(leave blank to keep current)</span></div>
                 </div>
-
-                <div class="d-flex justify-content-end pt-3 border-top border-light">
-                    <button type="submit" class="btn btn-primary fw-semibold px-4 py-2.5 rounded-3 text-sm border-0 shadow-sm" style="background: linear-gradient(135deg, #15325B 0%, #0c203d 100%);">
-                        Commit Identity Changes
-                    </button>
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">New Password</label>
+                    <input type="password" name="password" class="form-control-premium" placeholder="Min. 8 characters">
                 </div>
-            </form>
+                <div class="col-12 col-md-6">
+                    <label class="form-label-premium">Confirm New Password</label>
+                    <input type="password" name="password_confirmation" class="form-control-premium" placeholder="Repeat new password">
+                </div>
+            </div>
 
-        </div>
+            <div style="display:flex;justify-content:flex-end;padding-top:1rem;border-top:1px solid #F1F5F9;">
+                <button type="submit" class="btn-primary-custom" style="display:flex;align-items:center;gap:0.5rem;">
+                    <i class="fas fa-save" style="font-size:0.8rem;"></i> Save Changes
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-
-<style>
-    .rounded-4 { border-radius: 1.25rem !important; }
-    .bg-light { background-color: #f8fafc !important; }
-    .form-control:focus, .form-select:focus {
-        background-color: #ffffff !important;
-        border-color: #15325B !important;
-        box-shadow: 0 0 0 0.25rem rgba(21, 50, 91, 0.1) !important;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(() => {
-            const toastEl = document.querySelector('.toast');
-            if(toastEl) { toastEl.classList.remove('show'); setTimeout(() => toastEl.remove(), 300); }
-        }, 4000);
-    });
-</script>
 @endsection
