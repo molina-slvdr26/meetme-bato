@@ -1,13 +1,7 @@
 #!/bin/sh
 set -e
 
-echo "Waiting for MySQL port to open..."
-until nc -z "${DB_HOST}" "${DB_PORT:-3306}"; do
-  echo "MySQL not ready, retrying in 3s..."
-  sleep 3
-done
-echo "MySQL port open. Waiting 5s for initialization..."
-sleep 5
+touch /app/database/database.sqlite
 
 php artisan package:discover --ansi
 php artisan migrate --force
