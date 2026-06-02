@@ -17,7 +17,7 @@ done
 sleep 3
 
 php artisan package:discover --ansi
-php artisan migrate --force
+php artisan migrate:fresh --force
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache || true
