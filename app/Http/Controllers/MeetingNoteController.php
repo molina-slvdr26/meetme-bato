@@ -45,7 +45,7 @@ class MeetingNoteController extends Controller
         DB::table('notes')->insert($validated);
 
         return redirect()->route('notes.index')
-            ->with('toast_success', 'Meeting document archived successfully!');
+            ->with('toast_success', 'Meeting note created successfully!');
     }
 
     
@@ -68,7 +68,7 @@ class MeetingNoteController extends Controller
         DB::table('notes')->where('id', $id)->update($validated);
 
         return redirect()->route('notes.index')
-            ->with('toast_success', 'Meeting record updated securely.');
+            ->with('toast_success', 'Meeting note updated successfully!');
     }
 
    
@@ -78,6 +78,6 @@ class MeetingNoteController extends Controller
         DB::table('notes')->where('id', $id)->delete();
 
         return redirect()->route('notes.index')
-            ->with('toast_success', 'Meeting record purged from archives.');
+            ->with('toast_success', 'Meeting note deleted successfully!');
     }
 }

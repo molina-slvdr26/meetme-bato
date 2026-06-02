@@ -2,11 +2,8 @@
 @section('content')
 <div class="page-wrap" style="max-width:900px;">
 
-    @if(session('toast_success'))
-    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ session('toast_success') }}",'success'));</script>
-    @endif
     @if($errors->any())
-    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ $errors->first() }}",'error'));</script>
+    <script>document.addEventListener('DOMContentLoaded',()=>showToast(@json($errors->first()),'error'));</script>
     @endif
 
     <div style="margin-bottom:2rem;">

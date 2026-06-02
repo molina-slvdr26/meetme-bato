@@ -141,8 +141,29 @@
         @media (max-width: 768px) {
             .left-panel { display: none; }
         }
+
+        /* Toast */
+        #toast-wrap { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.625rem; }
+        .toast-item {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            background: #fff; border-radius: 12px; border-left: 4px solid #10B981;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
+            padding: 0.875rem 1rem 0.875rem 0.875rem; min-width: 300px; max-width: 380px;
+            animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1); position: relative; overflow: hidden;
+        }
+        .toast-item.t-error { border-left-color: #EF4444; }
+        .toast-icon-wrap { width: 30px; height: 30px; border-radius: 8px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.75rem; color: #10B981; }
+        .toast-item.t-error .toast-icon-wrap { background: rgba(239,68,68,0.1); color: #EF4444; }
+        .toast-msg { font-size: 0.8125rem; font-weight: 600; color: #111827; flex: 1; padding-top: 0.1rem; }
+        .toast-close { background: none; border: none; color: #9CA3AF; cursor: pointer; padding: 0; font-size: 0.75rem; flex-shrink: 0; margin-top: 0.15rem; }
+        .toast-close:hover { color: #374151; }
+        .toast-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: #10B981; animation: progress 4s linear forwards; }
+        .toast-item.t-error .toast-progress { background: #EF4444; }
+        @keyframes toastIn { from { transform: translateX(32px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes progress { from { width: 100%; } to { width: 0%; } }
     </style>
 </head>
+@php $loginToast = session('toast_success') ?: session('toast_error'); $loginToastType = session('toast_error') ? 'error' : 'success'; @endphp
 <body>
     <div class="left-panel">
         <div class="brand">
@@ -205,5 +226,26 @@
             </p>
         </div>
     </div>
+
+    <div id="toast-wrap"></div>
+    <script>
+    function showToast(msg, type = 'success') {
+        const icon = type === 'error' ? 'fa-xmark' : 'fa-check';
+        const el = document.createElement('div');
+        el.className = `toast-item ${type === 'error' ? 't-error' : ''}`;
+        el.innerHTML = `
+            <div class="toast-icon-wrap"><i class="fas ${icon}"></i></div>
+            <span class="toast-msg">${msg}</span>
+            <button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-xmark"></i></button>
+            <div class="toast-progress"></div>`;
+        document.getElementById('toast-wrap').appendChild(el);
+        setTimeout(() => { el.style.transition = 'all 0.3s'; el.style.transform = 'translateX(20px)'; el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 4200);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        @if($loginToast)
+            showToast(@json($loginToast), '{{ $loginToastType }}');
+        @endif
+    });
+    </script>
 </body>
 </html>

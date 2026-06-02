@@ -21,12 +21,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+            return redirect()->intended('dashboard')->with('toast_success', 'Welcome back, ' . Auth::user()->name . '!');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        ])->onlyInput('email')->with('toast_error', 'Invalid email or password.');
     }
 
     public function register(Request $request) {
@@ -44,7 +44,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('toast_success', 'Account created successfully. Welcome, ' . $user->name . '!');
     }
 
     public function profile()
@@ -101,6 +101,6 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        return redirect('/login')->with('toast_success', 'You have been logged out successfully.');
     }
 }

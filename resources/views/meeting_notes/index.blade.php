@@ -2,13 +2,6 @@
 @section('content')
 <div class="page-wrap">
 
-    @if(session('toast_success'))
-    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ session('toast_success') }}",'success'));</script>
-    @endif
-    @if(session('toast_error'))
-    <script>document.addEventListener('DOMContentLoaded',()=>showToast("{{ session('toast_error') }}",'error'));</script>
-    @endif
-
     {{-- Header --}}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
         <div>

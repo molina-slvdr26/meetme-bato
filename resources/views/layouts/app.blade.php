@@ -395,6 +395,19 @@ function showToast(msg, type = 'success') {
         setTimeout(() => el.remove(), 300);
     }, 4200);
 }
+
+// Auto-show flashed session toasts on any page that uses this layout
+document.addEventListener('DOMContentLoaded', () => {
+    @if(session('toast_success'))
+        showToast(@json(session('toast_success')), 'success');
+    @endif
+    @if(session('toast_error'))
+        showToast(@json(session('toast_error')), 'error');
+    @endif
+    @if(session('toast_warning'))
+        showToast(@json(session('toast_warning')), 'warning');
+    @endif
+});
 </script>
 </body>
 </html>
