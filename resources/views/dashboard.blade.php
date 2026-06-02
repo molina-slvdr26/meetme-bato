@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -76,7 +75,7 @@
                     <h5 class="fw-bold text-dark mb-1">Briefing Volume Velocity</h5>
                     <p class="text-muted text-uppercase tracking-wider mb-0" style="font-size: 10px; font-weight: 700; color: #94a3b8 !important;">Chronological strategy session cadence analytics</p>
                 </div>
-                <div class="position-relative flex-grow-1 w-100" style="height: 260px;">
+                <div class="position-relative flex-grow-1 w-100" style="height: 280px;">
                     <canvas id="dashboardTimelineChart"></canvas>
                 </div>
             </div>
@@ -116,7 +115,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         
-        // 1. TIMELINE VELOCITY CONFIG
+       
         const ctxTimeline = document.getElementById('dashboardTimelineChart').getContext('2d');
         new Chart(ctxTimeline, {
             type: 'line',
@@ -125,39 +124,56 @@
                 datasets: [{
                     label: 'Sessions Documented',
                     data: {!! json_encode($counts) !!},
-                    borderColor: '#1d4ed8', // Premium Workspace Indigo Accent
-                    backgroundColor: 'rgba(29, 78, 216, 0.03)',
+                    borderColor: '#1d4ed8', 
+                    backgroundColor: 'rgba(29, 78, 216, 0.04)',
                     borderWidth: 2.5,
-                    tension: 0.2,
+                    tension: 0.3, 
                     fill: true,
                     pointBackgroundColor: '#1d4ed8',
                     pointHoverBackgroundColor: '#1e40af',
-                    pointRadius: 3,
-                    pointHoverRadius: 5
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        top: 15,
+                        bottom: 0,
+                        left: 5,
+                        right: 15
+                    }
+                },
                 plugins: {
                     legend: { display: false }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { stepSize: 1, color: '#94a3b8', font: { size: 11, weight: '500' } },
+                        grace: '10%',
+                        ticks: { 
+                            stepSize: 1, 
+                            precision: 0,
+                            color: '#94a3b8', 
+                            font: { size: 11, weight: '500' } 
+                        },
                         grid: { color: '#f1f5f9' },
                         border: { dash: [5, 5] }
                     },
                     x: {
-                        ticks: { color: '#94a3b8', font: { size: 11, weight: '500' } },
+                        ticks: { 
+                            color: '#94a3b8', 
+                            font: { size: 11, weight: '500' } 
+                        },
                         grid: { display: false }
                     }
                 }
             }
         });
 
-        // 2. RESOURCE DENSITIES DOUGHNUT CONFIG
+        
         const ctxCompare = document.getElementById('dashboardComparisonChart').getContext('2d');
         new Chart(ctxCompare, {
             type: 'doughnut',
@@ -165,7 +181,7 @@
                 labels: ['Committee Personnel', 'Minutes Archived'],
                 datasets: [{
                     data: [{{ $totalUsers }}, {{ $totalNotes }}],
-                    backgroundColor: ['#0f172a', '#E67E5A'], // Deep Slate & Burnt Amber Corporate Colors
+                    backgroundColor: ['#0f172a', '#E67E5A'], 
                     borderWidth: 3,
                     borderColor: '#ffffff',
                     hoverOffset: 3

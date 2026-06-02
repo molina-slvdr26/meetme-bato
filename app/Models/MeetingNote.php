@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Note extends Model
+class MeetingNote extends Model 
 {
     use HasFactory;
 
-    // Allow these meeting fields to be mass-assigned safely
+    
+    protected $table = 'notes';
+
+    
     protected $fillable = [
         'user_id',
         'subject',
@@ -23,9 +26,6 @@ class Note extends Model
         'action_items'
     ];
 
-    /**
-     * Relationship back to the User/Board Member who logged it.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);

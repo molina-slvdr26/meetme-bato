@@ -3,46 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Note;
 use Illuminate\Http\Request;
-use Illuminate\SupportStyle;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Fetch Core Dashboard Counters
+   
         $totalUsers = User::count();
-        $totalNotes = Note::count();
+        $totalNotes = DB::table('notes')->count();
         
-        // Count entries created specifically by the currently logged-in authenticated user
-        // (Assumes a 'user_id' column exists on your notes table. If not, fallback safely to total)
-        $myNotesCount = Note::where('user_id', Auth::id())->count() ?? Note::count();
-        
-        // Count records created within the current calendar month
-        $thisMonthNotes = Note::whereMonth('meeting_date', Carbon::now()->month)
-                              ->whereYear('meeting_date', Carbon::now()->year)
-                              ->count();
 
-        // 2. Compute Timeline Analytics For Chart.js (Last 6 Months Cadence)
+        $myNotesCount = Auth::check() 
+            ? DB::table('notes')->where('user_id', Auth::id())->count() 
+            : $totalNotes;
+        
+       
+        $thisMonthNotes = DB::table('notes')
+            ->whereMonth('meeting_date', Carbon::now()->month)
+            ->whereYear('meeting_date', Carbon::now()->year)
+            ->count();
+
+        
+        $notesPerMonth = DB::table('notes')
+            ->select(
+                DB::raw('YEAR(meeting_date) as year'),
+                DB::raw('MONTH(meeting_date) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('meeting_date', '>=', Carbon::now()->subMonths(4)->startOfMonth())
+            ->groupBy('year', 'month')
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->year . '-' . sprintf('%02d', $item->month);
+            });
+
         $labels = [];
         $counts = [];
 
-        for ($i = 5; $i >= 0; $i--) {
-            $month = Carbon::now()->subMonths($i);
+        
+        for ($i = 4; $i >= -1; $i--) {
+            $monthDate = Carbon::now()->subMonths($i)->startOfMonth();
             
-            // Build chronological array labels (e.g., "Jan", "Feb", "Mar")
-            $labels[] = $month->format('M');
+            $labels[] = $monthDate->format('M');
+            $key = $monthDate->format('Y-m');
             
-            // Fetch total volume generated within this specific month sequence
-            $counts[] = Note::whereMonth('meeting_date', $month->month)
-                            ->whereYear('meeting_date', $month->year)
-                            ->count();
+            $counts[] = isset($notesPerMonth[$key]) ? $notesPerMonth[$key]->count : 0;
         }
 
-        // 3. Compact and send all 6 required parameters downstream to the view layer safely
         return view('dashboard', compact(
             'totalUsers', 
             'totalNotes', 

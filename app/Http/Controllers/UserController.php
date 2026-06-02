@@ -54,7 +54,6 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        // Prevent deleting yourself
         if (auth()->id() === $user->id) {
             return redirect()->route('users.index')->with('toast_error', 'You cannot delete your own account!');
         }

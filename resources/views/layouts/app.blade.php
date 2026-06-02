@@ -15,7 +15,7 @@
             font-family: 'Inter', sans-serif; 
             background-color: #c8c9cb;
         }
-        /* Custom layout structures mimicking your dark menu grid look */
+        
         .sidebar-wrapper {
             width: 260px;
             min-height: 100vh;
@@ -87,7 +87,9 @@
             <a href="{{ route('users.index') }}" class="custom-nav-link {{ request()->routeIs('users.index') ? 'active-tab' : '' }}">
                 <span>User Management</span>
             </a>
-            <a href="{{ route('notes.index') }}" class="custom-nav-link {{ request()->routeIs('notes.*') || request()->routeIs('notes.index') ? 'active-tab' : '' }}">
+            
+            
+            <a href="{{ route('notes.index') }}" class="custom-nav-link {{ request()->routeIs('notes.index') ? 'active-tab' : '' }}">
                 <span>Meeting Note</span>
             </a>
             
@@ -115,7 +117,7 @@
         </div>
     </aside>
 
-    <main class="flex-grow-1 p-4 overflow-y-auto" style="height: 100vh;">   
+    <main class="flex-grow-1 p-4 overflow-y-auto" style="height: 100vh;">   
         @yield('content')
     </main>
 

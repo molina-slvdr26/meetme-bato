@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -48,15 +47,6 @@ class AuthController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function dashboard() {
-        return view('dashboard', [
-            'totalUsers' => User::count(),
-            'totalNotes' => Note::count(),
-            'myNotesCount' => Auth::user()->notes()->count(),
-            'thisMonthNtes' => Note::whereMonth('created_at', now()->month)->count(),
-        ]);
-    }
-
     public function profile()
     {
         return view('auth.profile', ['user' => Auth::user()]);
@@ -64,7 +54,8 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        
+        $user = User::find(Auth::id());
         
         $request->validate([
             'name' => 'required|string|max:255',
@@ -76,7 +67,7 @@ class AuthController extends Controller
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        // Handle File Upload
+     
         if ($request->hasFile('profile_picture')) {
             if (!file_exists(public_path('avatars'))) {
                 mkdir(public_path('avatars'), 0755, true);
@@ -85,21 +76,22 @@ class AuthController extends Controller
             $imageName = time() . '.' . $request->profile_picture->extension();
             $request->profile_picture->move(public_path('avatars'), $imageName);
             
-            // Save path to DB
+           
             $user->profile_picture = 'avatars/' . $imageName;
         }
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'address' => $request->address,
-        ]);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->gender = $request->gender;
+        $user->address = $request->address;
 
         if ($request->filled('password')) {
-            $user->update(['password' => Hash::make($request->password)]);
+            $user->password = Hash::make($request->password);
         }
+
+       
+        $user->save();
 
         return back()->with('toast_success', 'Profile updated successfully!');
     }

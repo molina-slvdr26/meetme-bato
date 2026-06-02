@@ -20,7 +20,7 @@
             font-weight: 800;
             letter-spacing: -0.03em;
         }
-        /* Custom 2.5rem Soft Card with Glassmorphism Accent Edge */
+        
         .custom-card {
             border-radius: 2.5rem !important;
             max-width: 500px;
@@ -29,7 +29,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.7) !important;
         }
-        /* Meeting Workspace Badging */
+        
         .workspace-badge {
             background-color: #f1f5f9;
             color: #475569;
@@ -49,7 +49,7 @@
             background-color: #E67E5A;
             border-radius: 50%;
         }
-        /* Custom Smooth Focus Rings Matching Platform Identity */
+        
         .form-control-custom {
             padding: 0.95rem 1.2rem;
             border: 1px solid #cbd5e1;
@@ -69,7 +69,7 @@
             border-color: #1d4ed8;
             background-color: #fff;
         }
-        /* Strategic Executive Action Button */
+  
         .btn-custom {
             background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
             border-radius: 1rem !important;

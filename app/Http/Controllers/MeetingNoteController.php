@@ -2,26 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; 
 
-class NoteController extends Controller
+class MeetingNoteController extends Controller
 {
-    /**
-     * Display a listing of the boardroom minutes records.
-     */
+    
     public function index()
     {
-        // Fetch logs descending by meeting date for executive layout prioritization
-        $notes = Note::with('user')->orderBy('meeting_date', 'desc')->get();
         
-        return view('notes.index', compact('notes'));
+        $meetingNotes = DB::table('notes')->latest()->get(); 
+
+        return view('meeting_notes.index', compact('meetingNotes'));
     }
 
-    /**
-     * Store a newly created corporate minutes entry in storage.
-     */
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -35,22 +31,25 @@ class NoteController extends Controller
             'meeting_notes'    => 'required|string',
         ]);
 
-        // Securely bind the active log creation to the authenticated user account
+        
         $validated['user_id'] = Auth::id();
 
-        // Enforce structural empty JSON notation string for data mapping
+       
         $validated['action_items'] = json_encode([]);
+        
+        
+        $validated['created_at'] = now();
+        $validated['updated_at'] = now();
 
-        Note::create($validated);
+       
+        DB::table('notes')->insert($validated);
 
         return redirect()->route('notes.index')
             ->with('toast_success', 'Meeting document archived successfully!');
     }
 
-    /**
-     * Update the specified meeting minute vault entry securely.
-     */
-    public function update(Request $request, Note $note)
+    
+    public function update(Request $request, $id) 
     {
         $validated = $request->validate([
             'subject'          => 'required|string|max:255',
@@ -63,19 +62,20 @@ class NoteController extends Controller
             'meeting_notes'    => 'required|string',
         ]);
 
-        // Retain security ownership integrity parameters during lifecycle mutation changes
-        $note->update($validated);
+        $validated['updated_at'] = now();
+
+        
+        DB::table('notes')->where('id', $id)->update($validated);
 
         return redirect()->route('notes.index')
             ->with('toast_success', 'Meeting record updated securely.');
     }
 
-    /**
-     * Permanently purge a briefing log document from database records.
-     */
-    public function destroy(Note $note)
+   
+    public function destroy($id) // Changed from model type-hinting to ID
     {
-        $note->delete();
+        
+        DB::table('notes')->where('id', $id)->delete();
 
         return redirect()->route('notes.index')
             ->with('toast_success', 'Meeting record purged from archives.');

@@ -28,7 +28,7 @@
     </div>
 
     <div class="row g-4">
-        @forelse($notes as $note)
+        @forelse($meetingNotes as $meetingNote)
         <div class="col-12 col-lg-6">
             <div class="card border-0 shadow-sm rounded-4 p-2 h-100 bg-white">
                 <div class="card-body d-flex flex-column justify-content-between">
@@ -36,37 +36,37 @@
                         <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
                             <div style="max-width: 75%;">
                                 <span class="badge bg-light text-primary border border-primary border-opacity-10 mb-1 fw-bold text-uppercase" style="font-size: 9px; letter-spacing: 0.05em;">Minutes Log</span>
-                                <h5 class="fw-bold text-dark text-truncate mb-0">{{ $note->subject ?? 'Untitled Meeting' }}</h5>
+                                <h5 class="fw-bold text-dark text-truncate mb-0">{{ $meetingNote->subject ?? 'Untitled Meeting' }}</h5>
                             </div>
                             <div class="text-end">
-                                <span class="d-block fw-bold text-dark small">{{ \Carbon\Carbon::parse($note->meeting_date)->format('M d, Y') }}</span>
-                                <span class="text-muted text-uppercase fw-semibold" style="font-size: 10px;">{{ \Carbon\Carbon::parse($note->meeting_time)->format('h:i A') }}</span>
+                                <span class="d-block fw-bold text-dark small">{{ \Carbon\Carbon::parse($meetingNote->meeting_date)->format('M d, Y') }}</span>
+                                <span class="text-muted text-uppercase fw-semibold" style="font-size: 10px;">{{ \Carbon\Carbon::parse($meetingNote->meeting_time)->format('h:i A') }}</span>
                             </div>
                         </div>
 
                         <div class="row g-2 mb-3 text-muted small">
-                            <div class="col-6"><strong>📍 Location:</strong> <span class="text-dark">{{ $note->place ?? 'N/A' }}</span></div>
-                            <div class="col-6"><strong>✍️ Writer:</strong> <span class="text-dark">{{ $note->minutes_taken_by ?? 'N/A' }}</span></div>
-                            <div class="col-12 text-truncate"><strong>👥 Attendees:</strong> <span class="text-dark">{{ $note->attendees ?? 'None' }}</span></div>
+                            <div class="col-6"><strong>📍 Location:</strong> <span class="text-dark">{{ $meetingNote->place ?? 'N/A' }}</span></div>
+                            <div class="col-6"><strong>✍️ Writer:</strong> <span class="text-dark">{{ $meetingNote->minutes_taken_by ?? 'N/A' }}</span></div>
+                            <div class="col-12 text-truncate"><strong>👥 Attendees:</strong> <span class="text-dark">{{ $meetingNote->attendees ?? 'None' }}</span></div>
                         </div>
 
                         <div class="bg-light rounded-3 p-3 mb-3">
                             <h6 class="fw-bold text-secondary small text-uppercase mb-1" style="letter-spacing: 0.05em;">Discussion Notes</h6>
-                            <p class="text-muted small mb-0 text-break" style="white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">{{ $note->meeting_notes }}</p>
+                            <p class="text-muted small mb-0 text-break" style="white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6;">{{ $meetingNote->meeting_notes }}</p>
                         </div>
 
-                        @if($note->action_items && count(json_decode($note->action_items, true)) > 0)
+                        @if($meetingNote->action_items && count(json_decode($meetingNote->action_items, true)) > 0)
                         <div class="mb-4">
                             <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill fw-bold" style="font-size: 10px;">
-                                📋 {{ count(json_decode($note->action_items, true)) }} Action Items Generated
+                                📋 {{ count(json_decode($meetingNote->action_items, true)) }} Action Items Generated
                             </span>
                         </div>
                         @endif
                     </div>
 
                     <div class="d-flex justify-content-end gap-3 pt-3 border-top border-light">
-                        <button onclick="openEditMinutesModal({{ $note->id }}, {{ json_encode($note) }})" class="btn btn-link text-decoration-none text-primary p-0 fw-bold text-uppercase tracking-wider" style="font-size: 11px;">Modify</button>
-                        <button onclick="openDeleteMinutesModal({{ $note->id }})" class="btn btn-link text-decoration-none text-danger p-0 fw-bold text-uppercase tracking-wider" style="font-size: 11px;">Purge</button>
+                        <button onclick="openEditMinutesModal({{ $meetingNote->id }}, {{ json_encode($meetingNote) }})" class="btn btn-link text-decoration-none text-primary p-0 fw-bold text-uppercase tracking-wider" style="font-size: 11px;">Modify</button>
+                        <button onclick="openDeleteMinutesModal({{ $meetingNote->id }})" class="btn btn-link text-decoration-none text-danger p-0 fw-bold text-uppercase tracking-wider" style="font-size: 11px;">Purge</button>
                     </div>
                 </div>
             </div>
@@ -237,7 +237,7 @@
         editModal = new bootstrap.Modal(document.getElementById('editMinutesModal'));
         deleteModal = new bootstrap.Modal(document.getElementById('deleteMinutesModal'));
         
-        // Auto fade success messages cleanly
+    
         setTimeout(() => {
             const toastEl = document.querySelector('.toast');
             if(toastEl) { toastEl.classList.remove('show'); setTimeout(() => toastEl.remove(), 300); }
@@ -247,7 +247,7 @@
     function openAddMinutesModal() { addModal.show(); }
 
     function openEditMinutesModal(id, data) {
-        document.getElementById('editMinutesForm').action = `/notes/${id}`;
+        document.getElementById('editMinutesForm').action = `/meeting-notes/${id}`;
         document.getElementById('edit_subject').value = data.subject || '';
         document.getElementById('edit_place').value = data.place || '';
         document.getElementById('edit_meeting_date').value = data.meeting_date || '';
@@ -260,7 +260,7 @@
     }
 
     function openDeleteMinutesModal(id) {
-        document.getElementById('deleteMinutesForm').action = `/notes/${id}`;
+        document.getElementById('deleteMinutesForm').action = `/meeting-notes/${id}`;
         deleteModal.show();
     }
 </script>
