@@ -2,6 +2,7 @@ FROM php:8.2-cli-alpine
 
 RUN apk add --no-cache \
     mysql-client \
+    netcat-openbsd \
     nodejs \
     npm \
     git \

@@ -1,11 +1,13 @@
 #!/bin/sh
 set -e
 
-echo "Waiting for MySQL to be ready..."
-until mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT:-3306}" -u"${DB_USERNAME}" -p"${DB_PASSWORD}" --silent 2>/dev/null; do
+echo "Waiting for MySQL port to open..."
+until nc -z "${DB_HOST}" "${DB_PORT:-3306}"; do
+  echo "MySQL not ready, retrying in 3s..."
   sleep 3
 done
-echo "MySQL is ready."
+echo "MySQL port open. Waiting 5s for initialization..."
+sleep 5
 
 php artisan package:discover --ansi
 php artisan migrate --force
