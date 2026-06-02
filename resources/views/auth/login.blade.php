@@ -141,6 +141,13 @@
         @media (max-width: 768px) {
             .left-panel { display: none; }
         }
+        @media (max-width: 575.98px) {
+            .right-panel { padding: 1rem; align-items: flex-start; }
+            .form-card { padding: 1.75rem 1.5rem; border-radius: 16px; }
+            .form-title { font-size: 1.25rem; }
+            #toast-wrap { left: 0.75rem; right: 0.75rem; }
+            .toast-item { min-width: 0; max-width: none; width: 100%; }
+        }
 
         /* Toast */
         #toast-wrap { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.625rem; }

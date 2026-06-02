@@ -8,7 +8,7 @@
             <h1 class="page-title">Meeting Notes</h1>
             <p class="page-desc">Manage corporate session minutes, agendas, and action items.</p>
         </div>
-        <button onclick="openAdd()" class="btn-p btn-primary-p">
+        <button onclick="openAdd()" class="btn-p btn-primary-p btn-block-mobile">
             <i class="fas fa-plus" style="font-size:0.7rem;"></i> New Meeting Note
         </button>
     </div>

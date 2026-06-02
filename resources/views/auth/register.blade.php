@@ -114,6 +114,14 @@
         .toast-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: #EF4444; animation: progress 4s linear forwards; }
         @keyframes toastIn { from { transform: translateX(32px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes progress { from { width: 100%; } to { width: 0%; } }
+
+        @media (max-width: 575.98px) {
+            body { padding: 1rem; align-items: flex-start; }
+            .card { padding: 1.75rem 1.5rem; border-radius: 16px; }
+            .form-title { font-size: 1.25rem; }
+            #toast-wrap { left: 0.75rem; right: 0.75rem; }
+            .toast-item { min-width: 0; max-width: none; width: 100%; }
+        }
     </style>
 </head>
 <body>

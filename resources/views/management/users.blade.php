@@ -8,13 +8,13 @@
             <h1 class="page-title">User Management</h1>
             <p class="page-desc">Manage all registered platform accounts and credentials.</p>
         </div>
-        <button onclick="openAdd()" class="btn-p btn-primary-p">
+        <button onclick="openAdd()" class="btn-p btn-primary-p btn-block-mobile">
             <i class="fas fa-plus" style="font-size:0.7rem;"></i> Add New User
         </button>
     </div>
 
     {{-- Table --}}
-    <div class="card-p" style="overflow:hidden;">
+    <div class="card-p table-scroll" style="overflow:hidden;">
         <table style="width:100%;border-collapse:collapse;">
             <thead>
                 <tr style="background:var(--surface-2);">

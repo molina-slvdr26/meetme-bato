@@ -317,9 +317,114 @@
         .empty-icon { font-size: 2.5rem; color: var(--t5); margin-bottom: 1rem; }
         .empty-title { font-size: 0.9375rem; font-weight: 700; color: var(--t2); margin-bottom: 0.375rem; }
         .empty-desc { font-size: 0.8125rem; color: var(--t4); }
+
+        /* ════════════════════ MOBILE TOPBAR ════════════════════ */
+        .mobile-topbar { display: none; }
+        .sidebar-backdrop { display: none; }
+
+        /* ════════════════════ RESPONSIVE ════════════════════ */
+        @media (max-width: 991.98px) {
+            body { display: block; overflow: auto; }
+
+            /* Mobile top bar */
+            .mobile-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.75rem;
+                height: 58px;
+                padding: 0 1rem;
+                background: var(--sidebar-bg);
+                position: sticky;
+                top: 0;
+                z-index: 1030;
+                border-bottom: 1px solid var(--sidebar-border);
+            }
+            .mt-brand { display: flex; align-items: center; gap: 0.625rem; }
+            .mt-brand .sb-logo-icon { width: 30px; height: 30px; }
+            .mt-brand-text { font-size: 0.9375rem; font-weight: 800; letter-spacing: -0.02em; color: #F9FAFB; }
+            .mt-brand-text span { color: #A5B4FC; }
+            .mt-burger {
+                width: 38px; height: 38px;
+                border-radius: 9px;
+                background: rgba(255,255,255,0.06);
+                border: none;
+                color: #E5E7EB;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: background 0.15s ease;
+            }
+            .mt-burger:active { background: rgba(255,255,255,0.12); }
+
+            /* Sidebar becomes a slide-in drawer */
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                height: 100dvh;
+                width: 280px;
+                min-width: 280px;
+                z-index: 1050;
+                transform: translateX(-100%);
+                transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+                box-shadow: 4px 0 32px rgba(0,0,0,0.3);
+            }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+
+            /* Backdrop */
+            .sidebar-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(2px);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.28s ease, visibility 0.28s ease;
+            }
+            body.sidebar-open .sidebar-backdrop { opacity: 1; visibility: visible; }
+
+            .main { height: auto; min-height: calc(100vh - 58px); overflow: visible; }
+
+            .page-wrap { padding: 1.25rem 1rem; }
+            .page-title { font-size: 1.25rem; }
+        }
+
+        @media (max-width: 575.98px) {
+            .page-wrap { padding: 1rem 0.875rem; }
+            .page-title { font-size: 1.125rem; }
+
+            /* Stack table into a horizontal scroll wrapper */
+            .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .table-scroll table { min-width: 540px; }
+
+            /* Modals full-width feel */
+            .modal-dialog { margin: 0.75rem; }
+            .modal-premium-head { padding: 1.25rem 1.25rem 0; }
+            .modal-premium-body { padding: 0.875rem 1.25rem; }
+            .modal-premium-foot { padding: 0 1.25rem 1.25rem; }
+
+            /* Toasts full width */
+            #toast-wrap { left: 0.75rem; right: 0.75rem; top: 0.75rem; }
+            .toast-item { min-width: 0; max-width: none; width: 100%; }
+
+            /* Buttons can grow */
+            .btn-block-mobile { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
+
+<div class="mobile-topbar">
+    <div class="mt-brand">
+        <div class="sb-logo-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="mt-brand-text">MeetMe<span>Bato</span></div>
+    </div>
+    <button class="mt-burger" onclick="toggleSidebar()" aria-label="Menu"><i class="fas fa-bars"></i></button>
+</div>
+
+<div class="sidebar-backdrop" onclick="closeSidebar()"></div>
 
 <aside class="sidebar">
     <div class="sb-brand">
@@ -378,6 +483,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+function toggleSidebar() { document.body.classList.toggle('sidebar-open'); }
+function closeSidebar() { document.body.classList.remove('sidebar-open'); }
+// Close drawer when a nav link is tapped (mobile)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.sidebar .sb-link').forEach(link => {
+        link.addEventListener('click', () => { if (window.innerWidth < 992) closeSidebar(); });
+    });
+});
+
 function showToast(msg, type = 'success') {
     const icons = { success: 'fa-check', error: 'fa-xmark', warning: 'fa-triangle-exclamation' };
     const el = document.createElement('div');
