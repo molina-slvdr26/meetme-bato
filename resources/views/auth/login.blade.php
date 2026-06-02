@@ -3,161 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetMe Bato - Workspace Sign In</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>Sign In — MeetMe Bato</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #838996  1%, #ffcba4 50%, #fa8072 100%);
-            background-attachment: fixed;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #0C1016;
+            -webkit-font-smoothing: antialiased;
         }
-        .brand-font { 
-            font-family: 'Cabinet Grotesk', 'Inter', sans-serif;
-            font-weight: 800;
-            letter-spacing: -0.03em;
+
+        /* Left Panel */
+        .left-panel {
+            width: 420px;
+            min-width: 420px;
+            background: linear-gradient(160deg, #0D1117 0%, #111827 100%);
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .custom-card {
-            border-radius: 2.5rem !important;
-            max-width: 500px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.7) !important;
-        }
-        
-        .workspace-badge {
-            background-color: #f1f5f9;
-            color: #475569;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: 1px solid #e2e8f0;
-        }
-        .badge-pulse {
-            width: 6px;
-            height: 6px;
-            background-color: #E67E5A;
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -60px; left: -60px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
         }
-        
-        .form-control-custom {
-            padding: 0.95rem 1.2rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 1rem !important;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #1e293b;
-            background-color: #f8fafc;
-            transition: all 0.2s ease-in-out;
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; right: -40px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
-        .form-control-custom::placeholder {
-            color: #94a3b8;
+        .brand { display: flex; align-items: center; gap: 0.75rem; position: relative; z-index: 1; }
+        .brand-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 16px rgba(99,102,241,0.4);
         }
-        .form-control-custom:focus {
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.15);
-            border-color: #1d4ed8;
-            background-color: #fff;
+        .brand-icon i { color: #fff; font-size: 1rem; }
+        .brand-name { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.025em; color: #F9FAFB; }
+        .brand-name span { color: #A5B4FC; }
+
+        .panel-body { position: relative; z-index: 1; }
+        .panel-headline {
+            font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em;
+            color: #F9FAFB; line-height: 1.2; margin-bottom: 0.75rem;
         }
-  
-        .btn-custom {
-            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-            border-radius: 1rem !important;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            transition: all 0.2s ease-in-out;
-        }
-        .btn-custom:hover {
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px -5px rgba(29, 78, 216, 0.3) !important;
-        }
-        .btn-custom:active {
-            transform: translateY(1px);
-        }
-        .divider-container {
+        .panel-headline span { color: #A5B4FC; }
+        .panel-desc { font-size: 0.875rem; color: #6B7280; line-height: 1.7; }
+
+        .feature-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
+        .feature-item { display: flex; align-items: center; gap: 0.75rem; }
+        .feature-dot { width: 24px; height: 24px; border-radius: 6px; background: rgba(99,102,241,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .feature-dot i { color: #A5B4FC; font-size: 0.6rem; }
+        .feature-text { font-size: 0.8125rem; color: #6B7280; font-weight: 500; }
+
+        .panel-footer { position: relative; z-index: 1; font-size: 0.6875rem; color: #374151; }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
             display: flex;
             align-items: center;
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.75rem;
+            justify-content: center;
+            background: #F4F5F7;
+            padding: 2rem;
+        }
+        .form-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.08);
+        }
+        .form-title { font-size: 1.375rem; font-weight: 800; letter-spacing: -0.025em; color: #111827; margin-bottom: 0.375rem; }
+        .form-sub { font-size: 0.8125rem; color: #6B7280; }
+
+        .inp {
+            width: 100%;
+            background: #F9FAFB;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            color: #111827;
+            transition: all 0.15s ease;
+            outline: none;
+        }
+        .inp:focus { background: #fff; border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+        .inp::placeholder { color: #9CA3AF; }
+        .inp.error-inp { border-color: #EF4444; }
+        .inp.error-inp:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
+        .lbl { display: block; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #6B7280; margin-bottom: 0.375rem; }
+        .err-msg { font-size: 0.75rem; color: #EF4444; font-weight: 500; margin-top: 0.375rem; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-size: 0.9375rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 2rem 0;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 8px rgba(99,102,241,0.3), 0 8px 24px rgba(99,102,241,0.15);
         }
-        .divider-container::before, .divider-container::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px dashed #e2e8f0;
+        .btn-submit:hover { background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.4), 0 12px 32px rgba(99,102,241,0.2); }
+        .btn-submit:active { transform: translateY(0); }
+
+        .divider { display: flex; align-items: center; gap: 0.75rem; color: #D1D5DB; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #F3F4F6; }
+
+        .link-p { color: #6366F1; font-weight: 700; text-decoration: none; }
+        .link-p:hover { color: #4F46E5; text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .left-panel { display: none; }
         }
-        .divider-container:not(:empty)::before { margin-right: 1rem; }
-        .divider-container:not(:empty)::after { margin-left: 1rem; }
     </style>
 </head>
-<body class="min-vh-100 d-flex align-items-center justify-content-center p-3">
+<body>
+    <div class="left-panel">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-layer-group"></i></div>
+            <div class="brand-name">MeetMe<span>Bato</span></div>
+        </div>
+        <div class="panel-body">
+            <h2 class="panel-headline">Run better<br>meetings <span>together.</span></h2>
+            <p class="panel-desc">A unified workspace for capturing minutes, tracking action items, and managing your team—all in one place.</p>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-dot"><i class="fas fa-check"></i></div>
+                    <div class="feature-text">Document meeting minutes in seconds</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-dot"><i class="fas fa-check"></i></div>
+                    <div class="feature-text">Track action items and deadlines</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-dot"><i class="fas fa-check"></i></div>
+                    <div class="feature-text">Manage board members with ease</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">© {{ date('Y') }} MeetMe Bato. All rights reserved.</div>
+    </div>
 
-    <div class="card custom-card border-0 shadow-2xl p-3 p-sm-4 p-md-5">
-        <div class="card-body">
-            
-            <div class="text-center mb-4">
-               
-                
-                <h1 class="brand-font display-4 mb-2" style="color: #1e293b;">
-                    MeetMe<span style="color: #ff6347;">Bato</span>
-                </h1>
-                <p class="text-secondary small fw-medium mx-auto" style="max-width: 340px; line-height: 1.5;">
-                    Access minutes, capture action items, and review strategic team decisions securely.
-                </p>
+    <div class="right-panel">
+        <div class="form-card">
+            <div style="margin-bottom:2rem;">
+                <div class="form-title">Welcome back</div>
+                <div class="form-sub">Sign in to your workspace account</div>
             </div>
 
             <form action="{{ route('login') }}" method="POST">
                 @csrf
-                
-                <div class="mb-3.5">
-                    <label class="form-label text-dark small fw-bold mb-2 text-uppercase tracking-wider" style="font-size: 11px;">Workspace Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter email.com" required
-                        class="form-control form-control-custom @error('email') is-invalid @enderror">
-                    @error('email') 
-                        <div class="invalid-feedback mt-1 fw-medium">{{ $message }}</div> 
-                    @enderror
-                </div>
-
-                <div class="mb-4 mt-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label class="form-label text-dark small fw-bold mb-0 text-uppercase tracking-wider" style="font-size: 11px;">Password</label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-decoration-none small fw-semibold" style="color: #1d4ed8; font-size: 12px;">Forgot Account Key?</a>
-                        @endif
+                <div style="display:flex;flex-direction:column;gap:1rem;">
+                    <div>
+                        <label class="lbl">Email Address</label>
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com" required class="inp {{ $errors->has('email') ? 'error-inp' : '' }}">
+                        @error('email') <div class="err-msg">{{ $message }}</div> @enderror
                     </div>
-                    <input type="password" name="password" placeholder="Enter Password" required
-                        class="form-control form-control-custom">
+                    <div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.375rem;">
+                            <label class="lbl" style="margin:0;">Password</label>
+                        </div>
+                        <input type="password" name="password" placeholder="••••••••" required class="inp">
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-custom w-100 text-white fw-bold fs-6 border-0 shadow mt-2">
-                    Log In
+                <button type="submit" class="btn-submit" style="margin-top:1.5rem;">
+                    Sign In
                 </button>
             </form>
 
-            <div class="divider-container">Identity Management</div>
+            <div class="divider">or</div>
 
-            <p class="text-center text-muted mb-0 small fw-medium">
-                Need premium workspace access? <a href="{{ route('register') }}" class="fw-bold text-decoration-none" style="color: #1d4ed8;">Register Account</a>
+            <p style="text-align:center;font-size:0.8125rem;color:#6B7280;">
+                Don't have an account? <a href="{{ route('register') }}" class="link-p">Create one free</a>
             </p>
-            
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
